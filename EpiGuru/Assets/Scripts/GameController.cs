@@ -11,9 +11,8 @@ public class GameController : MonoBehaviour
     [SerializeField] private GameObject pauseMenu;
     [SerializeField] private Button pauseButton;
     [SerializeField] private Button resumeButton;
-    [SerializeField] private Button menuButton; 
-
-    public Vector3 coinCountTextPosition = Vector3.zero; 
+    [SerializeField] private Button menuButton;
+    [SerializeField] private Vector3 coinCountTextPosition = Vector3.zero; 
 
     private bool isPaused = false;
 
