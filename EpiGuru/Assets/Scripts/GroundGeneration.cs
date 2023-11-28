@@ -4,24 +4,25 @@ using UnityEngine;
 
 public class GroundGeneration : MonoBehaviour
 {
-    [SerializeField] private GameObject player; 
-    [SerializeField] private GameObject roadPrefab; 
-    [SerializeField] private float triggerDistance = 20f; 
-    [SerializeField] private float roadSegmentLength = 10f; 
-    [SerializeField] private float destroyDistance = 30f; 
+    [SerializeField] private GameObject player;
+    [SerializeField] private GameObject roadPrefab;
+    [SerializeField] private float triggerDistance = 20f;
+    [SerializeField] private float roadSegmentLength = 10f;
+    [SerializeField] private float destroyDistance = 30f;
 
     public delegate void SpawnNewRoadSegmentHandler(Vector3 roadPosition);
     public static event SpawnNewRoadSegmentHandler OnSpawnNewRoadSegment;
 
     private Transform playerTransform;
     private List<GameObject> roadSegments = new List<GameObject>();
+    private Transform roadSegmentsParent; // Move the declaration here
 
-    public List<GameObject> RoadSegments 
+    public List<GameObject> RoadSegments
     {
         get { return roadSegments; }
     }
 
-    public float RoadSegmentLength 
+    public float RoadSegmentLength
     {
         get { return roadSegmentLength; }
     }
@@ -30,8 +31,12 @@ public class GroundGeneration : MonoBehaviour
     {
         playerTransform = player.transform;
 
+        roadSegmentsParent = new GameObject("RoadSegmentsParent").transform;
+
         GameObject initialRoad = Instantiate(roadPrefab, transform.position, Quaternion.identity);
         roadSegments.Add(initialRoad);
+
+        initialRoad.transform.parent = roadSegmentsParent;
 
         if (OnSpawnNewRoadSegment != null)
         {
@@ -59,6 +64,9 @@ public class GroundGeneration : MonoBehaviour
     {
         GameObject newRoad = Instantiate(roadPrefab, roadSegments[roadSegments.Count - 1].transform.position + Vector3.forward * roadSegmentLength, Quaternion.identity);
         roadSegments.Add(newRoad);
+
+        // Set the new road segment as a child of the parent object
+        newRoad.transform.parent = roadSegmentsParent;
 
         if (OnSpawnNewRoadSegment != null)
         {

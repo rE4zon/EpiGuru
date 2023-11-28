@@ -7,6 +7,8 @@ public class CoinSpawner : MonoBehaviour
     [SerializeField] private GameObject coinPrefab;
     [SerializeField] private float coinSpawnProbability = 0.5f;
     [SerializeField] private float coinDestroyDistance = 30f;
+    [SerializeField] private LayerMask obstacleLayer;
+    [SerializeField] private Transform coinsParent;
 
     private GroundGeneration groundGeneration;
 
@@ -19,6 +21,8 @@ public class CoinSpawner : MonoBehaviour
         }
 
         GroundGeneration.OnSpawnNewRoadSegment += SpawnCoinsOnRoad;
+
+        coinsParent = new GameObject("CoinsParent").transform;
     }
 
     void SpawnCoinsOnRoad(Vector3 roadPosition)
@@ -35,21 +39,50 @@ public class CoinSpawner : MonoBehaviour
             return;
 
         float roadWidth = 10f;
-        float leftBoundary = currentRoadSegment.transform.position.x - roadWidth / 2;
-        float rightBoundary = currentRoadSegment.transform.position.x + roadWidth / 2;
+        float coinWidth = 1f;
+        float coinSpawnRange = (roadWidth - coinWidth) / 2;
 
         if (Random.value < coinSpawnProbability)
         {
-            float randomOffset = Random.Range(leftBoundary, rightBoundary);
+            float randomOffset = Random.Range(-coinSpawnRange, coinSpawnRange);
 
             if (currentRoadSegment != null)
             {
                 Vector3 coinPosition = currentRoadSegment.transform.position + Vector3.up * 0.5f + Vector3.right * randomOffset;
-                GameObject coin = Instantiate(coinPrefab, coinPosition, Quaternion.identity);
-                coin.tag = "Coin";
+
+                float minSpawnX = currentRoadSegment.transform.position.x - roadWidth / 2 + coinWidth / 2;
+                float maxSpawnX = currentRoadSegment.transform.position.x + roadWidth / 2 - coinWidth / 2;
+
+                coinPosition.x = Mathf.Clamp(coinPosition.x, minSpawnX, maxSpawnX);
+
+                Collider[] obstacleColliders = Physics.OverlapBox(coinPosition, new Vector3(coinWidth / 2, 0.5f, 0.5f), Quaternion.identity, obstacleLayer);
+
+                if (obstacleColliders.Length == 0)
+                {
+                    GameObject coin = Instantiate(coinPrefab, coinPosition, Quaternion.identity);
+
+                    coin.transform.parent = coinsParent;
+
+                    coin.tag = "Coin";
+                }
             }
         }
     }
+
+    //bool ObstacleExistsAtPosition(Vector3 position)
+    //{
+    //    Collider[] colliders = Physics.OverlapSphere(position, 0.5f);
+
+    //    foreach (Collider collider in colliders)
+    //    {
+    //        if (collider.CompareTag("Obstacle"))
+    //        {
+    //            return true;
+    //        }
+    //    }
+
+    //    return false;
+    //}
 
     void RemoveOldCoins(Vector3 roadPosition)
     {

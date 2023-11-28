@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 3222378848377101392}
   - component: {fileID: 726406475827678380}
   - component: {fileID: 4581961001228366783}
-  - component: {fileID: 3703468503384626135}
   - component: {fileID: 7612858365123247577}
   m_Layer: 0
   m_Name: GameManager
@@ -68,22 +67,10 @@ MonoBehaviour:
   obstaclePrefab: {fileID: 5160285643761838674, guid: efa43c990817e6041b8b3ae27bae2fca, type: 3}
   obstacleSpawnProbability: 300
   obstacleDestroyDistance: 100
+  obstacleLayer:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!114 &4581961001228366783
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1130168447880869797}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c18ce4ee0825dbe4e9e870f523bdec6f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  coinPrefab: {fileID: 3218081050590518981, guid: c2fb7f1e4b2142848b63d65091ae1666, type: 3}
-  coinSpawnProbability: 75
-  coinDestroyDistance: 100
---- !u!114 &3703468503384626135
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
